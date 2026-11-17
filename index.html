@@ -82,7 +82,10 @@ html,body{margin:0}
 .setbtn small{display:block;font:600 .75rem var(--body)}
 .switch{grid-template-columns:1fr 1fr}
 .switch button[data-t="D"]{grid-column:1/-1;padding:8px}
-body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,body.diario #run{display:none}
+body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,body.diario #run,body.diario #fimwrap{display:none}
+.fim{font:800 1.25rem var(--display);letter-spacing:.03em;width:100%;min-height:64px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.18);touch-action:manipulation}
+.fim:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.fim.conf{background:#c25e00;color:#fff}
 .run h2{font-size:1.1rem}
 .log .kg,.run .kg{display:grid;grid-template-columns:minmax(0,1fr) 48px 84px 48px;gap:8px;align-items:center}.log .kg label,.run .kg label{min-width:0}.log .kg input,.run .kg input{width:100%;box-sizing:border-box;padding:6px 4px}
 .big{font:800 1.1rem var(--display);color:var(--accent)}
@@ -243,6 +246,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <div class="minis"><figure class="mini"><svg viewBox="0 0 160 160" role="img" aria-label="Início: braços esticados, tronco reto"><path d="M24 140 L78 140" stroke="var(--equip)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M126 112 L126 148" stroke="var(--equip)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="150" cy="128" r="5" fill="var(--equip)"/><circle cx="50" cy="62" r="11" fill="var(--fg)"/><path d="M50 134 L52 76" stroke="var(--limb)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M52 134 L92 118 L124 136" stroke="var(--limb)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M150 128 L124 104" stroke="var(--equip)" stroke-width="2" fill="none"/><path d="M52 86 L90 96 L124 104" stroke="var(--fg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><figcaption>Início: braços esticados, tronco reto</figcaption></figure><figure class="mini"><svg viewBox="0 0 160 160" role="img" aria-label="Fim: puxe até a barriga, juntando as costas"><path d="M24 140 L78 140" stroke="var(--equip)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M126 112 L126 148" stroke="var(--equip)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="150" cy="128" r="5" fill="var(--equip)"/><circle cx="50" cy="62" r="11" fill="var(--fg)"/><path d="M50 134 L52 76" stroke="var(--limb)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M52 134 L92 118 L124 136" stroke="var(--limb)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M150 128 L70 112" stroke="var(--equip)" stroke-width="2" fill="none"/><path d="M52 86 L30 104 L70 112" stroke="var(--fg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M120 90 L84 100" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-dasharray="5 4"/></svg><figcaption>Fim: puxe até a barriga, juntando as costas</figcaption></figure></div><div class="log" data-k="B8" data-r="10"><div class="kg"><label for="kg-B8">Carga (kg)</label><button type="button" class="step" data-f="kg" data-d="-1" aria-label="Diminuir carga">−</button><input id="kg-B8" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="kg" data-d="1" aria-label="Aumentar carga">+</button></div><div class="kg"><label for="rp-B8">Repetições</label><button type="button" class="step" data-f="rp" data-d="-1" aria-label="Menos repetições">−</button><input id="rp-B8" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off"><button type="button" class="step" data-f="rp" data-d="1" aria-label="Mais repetições">+</button></div><div class="setbtns"><button type="button" class="setbtn" data-s="1" aria-pressed="false">Série 1<small></small></button><button type="button" class="setbtn" data-s="2" aria-pressed="false">Série 2<small></small></button><button type="button" class="setbtn" data-s="3" aria-pressed="false">Série 3<small></small></button></div><p class="last"></p></div></div></article></section>
 <section id="D" aria-label="Diário" hidden></section>
 <div class="card run" id="run"><h2>🏃 Esteira no final</h2><div class="kg"><label for="run-km">Distância (km)</label><button type="button" class="step" data-f="km" data-d="-1" aria-label="Menos km">−</button><input id="run-km" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="km" data-d="1" aria-label="Mais km">+</button></div><div class="kg"><label for="run-min">Tempo (min)</label><button type="button" class="step" data-f="min" data-d="-1" aria-label="Menos minutos">−</button><input id="run-min" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="min" data-d="1" aria-label="Mais minutos">+</button></div><p class="big" id="run-res"></p><p class="muted">Anote ao terminar. O − e o + mudam 0,1 km e 1 minuto.</p></div>
+<div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK e zera séries, cargas e esteira para o próximo treino.</p></div>
 <div class="rules"><h2>Regras para todo exercício</h2><ul>
 <li>Peso em que as 2 últimas repetições fiquem difíceis, mas com técnica perfeita.</li>
 <li>Fez todas as séries no topo da faixa em duas sessões seguidas? Aumente um pouco a carga.</li>
@@ -250,19 +254,23 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <li>Suba em 1 a 2 s e desça em 2 a 3 s, sem tranco.</li>
 <li>Com Mounjaro: beba água durante o treino e coma proteína depois. Tontura ou fraqueza: pare e sente.</li>
 </ul></div>
-<p class="foot">Versão do app: 17/11 (rosca no Scott). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 17/11 (botão terminar). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
 var K='treinoApp3',NOMES={"A1": "Supino reto com barra", "A2": "Supino inclinado com barra", "A3": "Crucifixo no voador", "A4": "Puxada alta pela frente", "A5": "Rosca Scott com barra W", "A6": "Rosca martelo no Scott", "A7": "Tríceps na polia com corda", "A8": "Tríceps francês sentado", "B1": "Leg press 45°", "B2": "Cadeira extensora", "B3": "Cadeira flexora", "B4": "Panturrilha no leg press", "B5": "Desenvolvimento sentado com halteres", "B6": "Elevação lateral", "B7": "Face pull na polia com corda", "B8": "Remada baixa sentado"},BARRA=["A1", "A2", "A5"];
 function pad(n){return (n<10?'0':'')+n}
 function hoje(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
-function fmt(d){var p=d.split('-');return p[2]+'/'+p[1]}
+function fmt(d){var p=d.slice(0,10).split('-');return p[2]+'/'+p[1]+(d.length>10?' ('+d.slice(11)+'º)':'')}
 function num(v){v=String(v||'').replace(',','.').replace(/[^0-9.]/g,'');var n=parseFloat(v);return isNaN(n)?null:n}
 function pace(m){var mm=Math.floor(m),ss=Math.round((m-mm)*60);if(ss===60){mm++;ss=0}return mm+':'+pad(ss)}
 function br(n,dec){return n.toLocaleString('pt-BR',{maximumFractionDigits:dec||0,minimumFractionDigits:0})}
 var st={};try{st=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
 st.kg=st.kg||{};st.rp=st.rp||{};st.log=st.log||{};st.peso=st.peso||93.8;st.run=st.run||{};if(st.barra==null)st.barra=10;
+st.closed=st.closed||{};
+function syncCur(){var h=hoje();if(st.cur&&st.cur.slice(0,10)!==h)st.cur=null;if(!st.cur&&(st.log[h]||st.run[h])&&!st.closed[h])st.cur=h}
+syncCur();
+function curKey(){if(st.cur)return st.cur;var h=hoje(),k=h,n=2;while(st.log[k]||st.run[k]||st.closed[k]){k=h+'#'+n;n++}st.cur=k;return k}
 function isB(k){return BARRA.indexOf(k)>=0}
 function eff(k,x){return x.kg==null?null:x.kg+(isB(k)?(x.b!=null?x.b:st.barra):0)}
 // migra versão anterior (cargas e séries marcadas hoje)
@@ -275,12 +283,12 @@ try{var old=JSON.parse(localStorage.getItem('treinoApp2')||'null');if(old&&!st.m
 function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}}
 function defR(l){return st.rp[l.dataset.k]||l.dataset.r}
 var aba='A';
-function lastFor(k){var ds=Object.keys(st.log).filter(function(d){return d<hoje()&&st.log[d][k]}).sort();if(!ds.length)return null;
+function lastFor(k){var ds=Object.keys(st.log).filter(function(d){return d!==st.cur&&st.log[d][k]}).sort();if(!ds.length)return null;
  var d=ds[ds.length-1],ss=st.log[d][k],v=Object.keys(ss).map(function(i){return ss[i]});return {d:d,sets:v}}
 function descSets(v,k){var kg={},out=[];v.forEach(function(x){var e=eff(k,x),key=(e==null?'?':br(e,1))+' kg';kg[key]=kg[key]||[];kg[key].push(x.r==null?'?':x.r)});
  Object.keys(kg).forEach(function(key){out.push(kg[key].length+'× ('+kg[key].join(', ')+' rep) com '+key)});return out.join(' + ')}
 function render(){
- var tot=0,done=0,day=st.log[hoje()]||{};
+ var tot=0,done=0,day=(st.cur&&st.log[st.cur])||{};
  document.querySelectorAll('.log').forEach(function(l){
   var k=l.dataset.k,ss=day[k]||{},bs=l.querySelectorAll('.setbtn'),all=true;
   bs.forEach(function(b){var x=ss[b.dataset.s],on=!!x;b.setAttribute('aria-pressed',String(on));
@@ -307,22 +315,32 @@ document.querySelectorAll('.log').forEach(function(l){
   inp.value=b.dataset.f==='kg'?String(v).replace('.',','):String(v);upd()})});
  l.querySelectorAll('.setbtn').forEach(function(b){var lt=0;b.addEventListener('click',function(){
   var now=Date.now();if(now-lt<800)return;lt=now;
-  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();upd();var h=hoje(),d=st.log[h]=st.log[h]||{};d[k]=d[k]||{};
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();upd();var h=curKey(),d=st.log[h]=st.log[h]||{};d[k]=d[k]||{};
   if(d[k][b.dataset.s])delete d[k][b.dataset.s];else d[k][b.dataset.s]={kg:num(kg.value),r:num(rp.value),t:Date.now()};if(isB(k))d[k][b.dataset.s].b=st.barra;
   if(!Object.keys(d[k]).length)delete d[k];if(!Object.keys(d).length)delete st.log[h];
   save();render();if(navigator.vibrate)navigator.vibrate(15)})});
 });
 (function(){var km=document.getElementById('run-km'),mi=document.getElementById('run-min'),res=document.getElementById('run-res');
- function load(){var r=st.run[hoje()]||{};km.value=r.km?String(r.km).replace('.',','):'';mi.value=r.min?String(r.min).replace('.',','):'';out()}
- function out(){var r=st.run[hoje()]||{};if(r.km&&r.min){var v=r.km/(r.min/60);res.textContent='Média: '+br(v,1)+' km/h · ritmo '+pace(r.min/r.km)+' por km'}else res.textContent=''}
- function upd(){var h=hoje(),a=num(km.value),b=num(mi.value);if(a==null&&b==null){delete st.run[h]}else st.run[h]={km:a,min:b};save();out()}
+ function load(){var r=(st.cur&&st.run[st.cur])||{};km.value=r.km?String(r.km).replace('.',','):'';mi.value=r.min?String(r.min).replace('.',','):'';out()}
+ function out(){var r=(st.cur&&st.run[st.cur])||{};if(r.km&&r.min){var v=r.km/(r.min/60);res.textContent='Média: '+br(v,1)+' km/h · ritmo '+pace(r.min/r.km)+' por km'}else res.textContent=''}
+ function upd(){var a=num(km.value),b=num(mi.value);if(a==null&&b==null){if(st.cur)delete st.run[st.cur]}else{var h=curKey();st.run[h]={km:a,min:b}}save();out()}
  ['input','change','blur','keyup'].forEach(function(ev){km.addEventListener(ev,upd);mi.addEventListener(ev,upd)});
  document.querySelectorAll('#run .step').forEach(function(b){b.addEventListener('click',function(){var isK=b.dataset.f==='km',inp=isK?km:mi,v=num(inp.value)||0;
   v=isK?Math.max(0,Math.round((v+(+b.dataset.d)*0.1)*10)/10):Math.max(0,v+(+b.dataset.d));inp.value=String(v).replace('.',',');upd()})});
- load();document.addEventListener('visibilitychange',function(){if(!document.hidden)load()})})();
+ window.__runLoad=load;load();document.addEventListener('visibilitychange',function(){if(!document.hidden){syncCur();load()}})})();
+var fb=document.getElementById('fim'),ft=document.getElementById('fimtxt'),fT=null,F0=fb.textContent,T0=ft.textContent;
+fb.addEventListener('click',function(){
+ var k=st.cur,tem=k&&((st.log[k]&&Object.keys(st.log[k]).length)||st.run[k]);
+ if(!tem){ft.textContent='Ainda não há séries nem esteira marcadas hoje para gravar.';setTimeout(function(){ft.textContent=T0},3000);return}
+ if(!fT){fb.textContent='Toque de novo para confirmar';fb.classList.add('conf');fT=setTimeout(function(){fb.textContent=F0;fb.classList.remove('conf');fT=null},4000);return}
+ clearTimeout(fT);fT=null;fb.textContent=F0;fb.classList.remove('conf');
+ st.closed[k]=Date.now();st.cur=null;st.kg={};st.rp={};save();
+ document.querySelectorAll('.log').forEach(function(l){var x=l.dataset.k;l.querySelector('#kg-'+x).value='';l.querySelector('#rp-'+x).value=l.dataset.r;var bi=l.querySelector('.barinfo');if(bi)bi.textContent='+ barra '+br(st.barra,1)+' kg (o peso da barra se muda no GYM BOOK)'});
+ if(window.__runLoad)window.__runLoad();window.__salvo=true;show('D');window.scrollTo(0,0);window.__salvo=false;if(navigator.vibrate)navigator.vibrate([30,60,30]);
+});
 var rs=document.getElementById('reset'),rsT=null;
 rs.addEventListener('click',function(){if(!rsT){rs.textContent='Toque de novo para apagar hoje';rsT=setTimeout(function(){rs.textContent='Recomeçar o dia';rsT=null},3000);return}
- clearTimeout(rsT);rsT=null;rs.textContent='Recomeçar o dia';delete st.log[hoje()];save();render()});
+ clearTimeout(rsT);rsT=null;rs.textContent='Recomeçar o dia';if(st.cur){delete st.log[st.cur];delete st.run[st.cur];st.cur=null}save();if(window.__runLoad)window.__runLoad();render()});
 
 // ---------- cálculos ----------
 var MET=3.5,ROM=0.5,TSUBIDA=1.5,G=9.81;
@@ -343,7 +361,8 @@ function diario(){
  var D=document.getElementById('D'),dias=Object.keys(st.log).concat(Object.keys(st.run).filter(function(d){return st.run[d].km&&!st.log[d]})).sort().reverse(),cs=dias.map(calc),h='';
  h+='<div class="card"><h2>GYM BOOK</h2><p class="muted">Cada série que você marca entra aqui com a carga e as repetições do momento. Os números são estimativas.</p>'
   +'<div class="kg"><label for="peso">Seu peso (kg)</label><input id="peso" type="text" inputmode="decimal" value="'+String(st.peso).replace('.',',')+'"></div>'
-  +'<div class="kg"><label for="barra">Peso da barra (kg)</label><input id="barra" type="text" inputmode="decimal" value="'+String(st.barra).replace('.',',')+'"></div><p class="muted">No supino você anota as anilhas somadas e o app soma a barra. Barra olímpica comum: 20 kg; barras menores: 10 a 15 kg. Pergunte na academia e ajuste aqui.</p>'
+  +'<div class="kg"><label for="barra">Peso da barra (kg)</label><input id="barra" type="text" inputmode="decimal" value="'+String(st.barra).replace('.',',')+'"></div><p class="muted">No supino e na rosca Scott você anota as anilhas somadas e o app soma a barra. Barra olímpica comum: 20 kg; barras menores: 10 a 15 kg. Pergunte na academia e ajuste aqui.</p>'
+  +(window.__salvo?'<p class="big">✓ Treino gravado no GYM BOOK! Os campos foram zerados para o próximo treino.</p>':'')
   +'<div class="btnrow"><button class="reset" id="share" type="button">Enviar GYM BOOK (copiar / compartilhar)</button></div></div>';
  if(!cs.length){h+='<div class="card"><p>Nenhum treino registrado ainda. Marque as séries no Treino A ou B e volte aqui.</p></div>';D.innerHTML=h;bindD();return}
  // evolução: gráfico de volume
@@ -351,7 +370,7 @@ function diario(){
  h+='<div class="card"><h3>Evolução do volume <small>(kg levantados por treino)</small></h3><div class="bars" style="margin-bottom:22px">'
   +ult.map(function(c){return '<div class="bar" style="height:'+Math.max(3,c.vol/mx*100)+'%" title="'+br(c.vol)+' kg"><i>'+fmt(c.d)+' '+c.treino+'</i></div>'}).join('')+'</div></div>';
  // evolução por exercício
- var first={},last={};dias.slice().reverse().forEach(function(d){Object.keys(st.log[d]).forEach(function(k){
+ var first={},last={};dias.slice().reverse().forEach(function(d){Object.keys(st.log[d]||{}).forEach(function(k){
   var ss=st.log[d][k],m=0;Object.keys(ss).forEach(function(i){m=Math.max(m,eff(k,ss[i])||0)});if(!m)return;if(!(k in first))first[k]={d:d,kg:m};last[k]={d:d,kg:m}})});
  var ks=Object.keys(last).sort();
  if(ks.length){h+='<div class="card"><h3>Carga por exercício <small>(maior carga do dia)</small></h3><table class="evo"><tr><th>Exercício</th><th>Início → agora</th></tr>'
@@ -359,7 +378,7 @@ function diario(){
    return '<tr><td>'+(NOMES[k]||k)+'</td><td>'+br(a,1)+' → '+br(b,1)+' kg'+(p>0?' <span class="up">+'+p+'%</span>':'')+'</td></tr>'}).join('')+'</table></div>'}
  // dias
  cs.forEach(function(c){
-  h+='<div class="card"><h3>'+fmt(c.d)+' · Treino '+c.treino+(c.d===hoje()?' <small>(hoje)</small>':'')+'</h3><div class="stats">'
+  h+='<div class="card"><h3>'+fmt(c.d)+' · Treino '+c.treino+(c.d===st.cur?' <small>(em andamento)</small>':(st.closed[c.d]?' <small>✓ terminado às '+new Date(st.closed[c.d]).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</small>':''))+'</h3><div class="stats">'
    +'<div class="stat"><b>'+br(c.vol)+' kg</b><span>volume (carga × repetições)</span></div>'
    +'<div class="stat"><b>~'+br(c.kcal)+' kcal</b><span>calorias em ~'+c.min+' min</span></div>'
    +'<div class="stat"><b>'+br(c.trab/1000,1)+' kJ</b><span>trabalho mecânico</span></div>'
