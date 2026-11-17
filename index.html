@@ -106,6 +106,9 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 .exl{margin:0;padding-left:18px;display:grid;gap:2px;font-size:.92rem}
 .bars{display:flex;align-items:flex-end;gap:6px;height:120px;padding-top:8px}
 .bar{flex:1;background:var(--accent);border-radius:4px 4px 0 0;min-height:3px;position:relative}
+.bar em{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font:700 .68rem var(--body);font-style:normal;color:var(--fg);white-space:nowrap}
+.kc .bar{background:#c25e00}
+.sel{font:600 1.05rem var(--body);width:100%;min-height:48px;padding:8px 10px;border-radius:10px;border:2px solid var(--accent);background:var(--bg);color:var(--fg)}
 .bar i{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font:600 .7rem var(--body);font-style:normal;color:var(--muted);white-space:nowrap}
 .evo{width:100%;border-collapse:collapse;font-size:.9rem}
 .evo td,.evo th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
@@ -253,7 +256,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <div class="card run" id="run"><h2>🏃 Esteira / corrida</h2><div class="kg"><label for="run-km">Distância (km)</label><button type="button" class="step" data-f="km" data-d="-1" aria-label="Menos km">−</button><input id="run-km" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="km" data-d="1" aria-label="Mais km">+</button></div><div class="kg"><label for="run-min">Tempo (min)</label><button type="button" class="step" data-f="min" data-d="-1" aria-label="Menos minutos">−</button><input id="run-min" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="min" data-d="1" aria-label="Mais minutos">+</button></div><p class="big" id="run-res"></p><div class="stats" id="run-stats"></div><p class="muted" id="run-cmp"></p><p class="muted">Anote ao terminar. O − e o + mudam 0,1 km e 1 minuto.</p></div>
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
-<p class="foot">Versão do app: 17/11 (sem regras). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 17/11 (book por data). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -376,7 +379,7 @@ document.getElementById('fimsim').addEventListener('click',function(){
  var k=st.cur;document.getElementById('fimbox').hidden=true;fb.hidden=false;if(!k)return;
  st.closed[k]=Date.now();st.cur=null;st.kg={};st.rp={};save();
  document.querySelectorAll('.log').forEach(function(l){var x=l.dataset.k;l.querySelector('#kg-'+x).value='';l.querySelector('#rp-'+x).value=l.dataset.r;var bi=l.querySelector('.barinfo');if(bi)bi.textContent='+ barra '+br(st.barra,1)+' kg (o peso da barra se muda no GYM BOOK)'});
- if(window.__runLoad)window.__runLoad();if(window.__swimLoad)window.__swimLoad();window.__salvo=true;show('D');window.scrollTo(0,0);window.__salvo=false;if(navigator.vibrate)navigator.vibrate([30,60,30]);
+ if(window.__runLoad)window.__runLoad();if(window.__swimLoad)window.__swimLoad();window.__salvo=true;window.__dsel=k;show('D');window.scrollTo(0,0);window.__salvo=false;if(navigator.vibrate)navigator.vibrate([30,60,30]);
 });
 var rs=document.getElementById('reset'),rsT=null;
 rs.addEventListener('click',function(){if(!rsT){rs.textContent='Toque de novo para apagar hoje';rsT=setTimeout(function(){rs.textContent='Recomeçar o dia';rsT=null},3000);return}
@@ -400,16 +403,22 @@ function calc(d){
 
 function diario(){
  var D=document.getElementById('D'),dias=(function(){var o={};Object.keys(st.log).forEach(function(d){o[d]=1});Object.keys(st.run).forEach(function(d){if(runCalc(st.run[d]))o[d]=1});Object.keys(st.swim).forEach(function(d){if(swimCalc(st.swim[d]))o[d]=1});return Object.keys(o)})().sort().reverse(),cs=dias.map(calc),h='';
- h+='<div class="card"><h2>GYM BOOK</h2><p class="muted">Cada série que você marca entra aqui com a carga e as repetições do momento. Os números são estimativas.</p>'
+ h+='<div class="card"><h3>⚙️ Ajustes</h3><p class="muted">Cada série que você marca entra aqui com a carga e as repetições do momento. Os números são estimativas.</p>'
   +'<div class="kg"><label for="peso">Seu peso (kg)</label><input id="peso" type="text" inputmode="decimal" value="'+String(st.peso).replace('.',',')+'"></div>'
   +'<div class="kg"><label for="barra">Peso da barra (kg)</label><input id="barra" type="text" inputmode="decimal" value="'+String(st.barra).replace('.',',')+'"></div><p class="muted">No supino e na rosca Scott você anota as anilhas somadas e o app soma a barra. Barra olímpica comum: 20 kg; barras menores: 10 a 15 kg. Pergunte na academia e ajuste aqui.</p>'
   +(window.__salvo?'<p class="big">✓ Treino gravado no GYM BOOK! Os campos foram zerados para o próximo treino.</p>':'')
   +'<div class="btnrow"><button class="reset" id="share" type="button">Enviar GYM BOOK (copiar / compartilhar)</button></div></div>';
  if(!cs.length){h+='<div class="card"><p>Nenhum treino registrado ainda. Marque as séries no Treino A ou B e volte aqui.</p></div>';D.innerHTML=h;bindD();return}
+ var hTop=h;h='';var hj=hoje();
+ if(!window.__dsel||(window.__dsel!=='vazio'&&!cs.some(function(c){return c.d===window.__dsel}))){var tt=cs.filter(function(c){return c.d.slice(0,10)===hj});window.__dsel=tt.length?tt[0].d:'vazio'}
+ var opts=(cs.some(function(c){return c.d.slice(0,10)===hj})?'':'<option value="vazio">Hoje · ainda sem treino</option>')
+  +cs.map(function(c){return '<option value="'+c.d+'"'+(c.d===window.__dsel?' selected':'')+'>'+fmt(c.d)+(c.d.slice(0,10)===hj?' (hoje)':'')+' · '+c.treino+'</option>'}).join('');
+ var selHtml=(window.__salvo?'<div class="card"><p class="big">✓ Treino gravado no GYM BOOK! Os campos foram zerados para o próximo treino.</p></div>':'')+'<div class="card"><h2>📒 GYM BOOK</h2><label for="diasel"><b>Escolha o dia</b></label><select id="diasel" class="sel">'+opts+'</select></div>'
+  +(window.__dsel==='vazio'?'<div class="card"><h3>Hoje ('+fmt(hj)+')</h3><p>Ainda não há treino registrado hoje. Escolha acima um dia anterior para ver.</p></div>':'');
  // evolução: gráfico de volume
- var ult=cs.slice(0,10).reverse(),mx=Math.max.apply(null,ult.map(function(c){return c.vol}))||1;
+ var ult=cs.filter(function(c){return c.vol>0}).slice(0,10).reverse(),mx=Math.max.apply(null,ult.map(function(c){return c.vol}))||1;
  h+='<div class="card"><h3>Evolução do volume <small>(kg levantados por treino)</small></h3><div class="bars" style="margin-bottom:22px">'
-  +ult.map(function(c){return '<div class="bar" style="height:'+Math.max(3,c.vol/mx*100)+'%" title="'+br(c.vol)+' kg"><i>'+fmt(c.d)+' '+c.treino+'</i></div>'}).join('')+'</div></div>';
+  +ult.map(function(c){return '<div class="bar" style="height:'+Math.max(3,c.vol/mx*100)+'%" title="'+br(c.vol)+' kg"><i>'+fmt(c.d)+'</i></div>'}).join('')+'</div></div>';
  // evolução por exercício
  var first={},last={};dias.slice().reverse().forEach(function(d){Object.keys(st.log[d]||{}).forEach(function(k){
   var ss=st.log[d][k],m=0;Object.keys(ss).forEach(function(i){m=Math.max(m,eff(k,ss[i])||0)});if(!m)return;if(!(k in first))first[k]={d:d,kg:m};last[k]={d:d,kg:m}})});
@@ -418,8 +427,8 @@ function diario(){
   +ks.map(function(k){var a=first[k].kg,b=last[k].kg,p=a?Math.round((b-a)/a*100):0;
    return '<tr><td>'+(NOMES[k]||k)+'</td><td>'+br(a,1)+' → '+br(b,1)+' kg'+(p>0?' <span class="up">+'+p+'%</span>':'')+'</td></tr>'}).join('')+'</table></div>'}
  // dias
- cs.forEach(function(c){
-  h+='<div class="card"><h3>'+fmt(c.d)+' · '+c.treino+(c.d===st.cur?' <small>(em andamento)</small>':(st.closed[c.d]?' <small>✓ terminado às '+new Date(st.closed[c.d]).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</small>':''))+'</h3>'+(c.sets?'<div class="stats">'
+ var dh='';cs.filter(function(c){return c.d===window.__dsel}).forEach(function(c){
+  dh+='<div class="card"><h3>'+fmt(c.d)+' · '+c.treino+(c.d===st.cur?' <small>(em andamento)</small>':(st.closed[c.d]?' <small>✓ terminado às '+new Date(st.closed[c.d]).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</small>':''))+'</h3>'+(c.sets?'<div class="stats">'
    +'<div class="stat"><b>'+br(c.vol)+' kg</b><span>volume (carga × repetições)</span></div>'
    +'<div class="stat"><b>~'+br(c.kcal)+' kcal</b><span>calorias em ~'+c.min+' min</span></div>'
    +'<div class="stat"><b>'+br(c.trab/1000,1)+' kJ</b><span>trabalho mecânico</span></div>'
@@ -437,6 +446,7 @@ function diario(){
      +'<div class="stat"><b>'+br(c.swim.met,1)+' MET</b><span>esforço médio</span></div></div><p class="muted">'+cmpSwim(c.swim,c.d)+'</p>':'')
    +'<p class="big">Total do dia: ~'+br(c.tot)+' kcal</p>'
    +'</div>'});
+ h=selHtml+dh+h+hTop;
  h+='<div class="card"><h3>Como calculo</h3><ul class="exl">'
   +'<li><b>Volume:</b> soma de carga × repetições de todas as séries.</li>'
   +'<li><b>Calorias:</b> musculação moderada (MET 3,5) × seu peso × tempo. O tempo vai da primeira à última série marcada (mínimo de 2 min por série). O aquecimento não entra.</li>'
@@ -445,8 +455,14 @@ function diario(){
   +'<li><b>Trabalho:</b> carga × gravidade × 0,5 m de percurso por repetição (só a subida).</li>'
   +'<li><b>Potência:</b> esse trabalho dividido por 1,5 s de subida por repetição.</li>'
   +'<li>Halteres: anote o peso de um halter só. Máquinas: o número da placa. São estimativas para comparar um treino com outro, não medidas exatas.</li></ul></div>';
+ // gráfico de kcal por dia
+ var byD={};cs.forEach(function(c){var d=c.d.slice(0,10);byD[d]=(byD[d]||0)+c.tot});
+ var dk=Object.keys(byD).sort().slice(-14),km=Math.max.apply(null,dk.map(function(d){return byD[d]}))||1,soma=dk.reduce(function(a,d){return a+byD[d]},0);
+ h+='<div class="card"><h3>🔥 Calorias por dia <small>(musculação + aeróbica)</small></h3><div class="bars kc" style="margin:22px 0 22px">'
+  +dk.map(function(d){return '<div class="bar" style="height:'+Math.max(3,byD[d]/km*100)+'%"><em>'+br(byD[d])+'</em><i>'+fmt(d)+'</i></div>'}).join('')+'</div>'
+  +'<p class="muted">'+dk.length+' dia(s) de treino · média ~'+br(soma/dk.length)+' kcal por dia · total ~'+br(soma)+' kcal'+(Object.keys(byD).length>14?' (mostrando os últimos 14)':'')+'</p></div>';
  D.innerHTML=h;bindD();
- function bindD(){var p=document.getElementById('peso');p.addEventListener('input',function(){var v=num(p.value);if(v&&v>30){st.peso=v;save()}});
+ function bindD(){var ds=document.getElementById('diasel');if(ds)ds.addEventListener('change',function(){window.__dsel=ds.value;diario()});var p=document.getElementById('peso');p.addEventListener('input',function(){var v=num(p.value);if(v&&v>30){st.peso=v;save()}});
   p.addEventListener('change',diario);
   var bb=document.getElementById('barra');bb.addEventListener('input',function(){var v=num(bb.value);if(v!=null){st.barra=v;save()}});bb.addEventListener('change',diario);
   document.getElementById('share').addEventListener('click',function(){
