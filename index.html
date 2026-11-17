@@ -95,7 +95,8 @@ dialog.how::backdrop{background:rgba(0,0,0,.55)}
 .howtop{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-14px;background:var(--card,#fff);padding:6px 0;z-index:1}.howtop h3{margin:0}
 .howx{width:40px;height:40px;border-radius:50%;border:1px solid var(--line,#ccd);background:transparent;color:inherit;font-size:1.1rem}
 .howok{width:100%;min-height:50px;margin-top:12px;border-radius:12px;border:0;background:#0f7a5f;color:#fff;font:700 1rem var(--body,system-ui)}
-body.diario .howbtn{display:none}
+body.diario .ex .howbtn{display:none}
+.popc p{margin:0 0 10px}.popc .exl{font-size:1rem;gap:8px}
 .exd{border:1px solid var(--line);border-radius:12px;background:var(--bg)}
 .exd summary{list-style:none;cursor:pointer;padding:12px 14px;min-height:44px;font:700 1rem var(--body);color:var(--accent);display:flex;justify-content:space-between;align-items:center}
 .exd summary::-webkit-details-marker{display:none}.exd summary::after{content:'▾';font-size:1.2rem;transition:transform .2s}.exd[open] summary::after{transform:rotate(180deg)}
@@ -269,7 +270,8 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <div class="card run" id="run"><h2>🏃 Esteira / corrida</h2><div class="kg"><label for="run-km">Distância (km)</label><button type="button" class="step" data-f="km" data-d="-1" aria-label="Menos km">−</button><input id="run-km" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="km" data-d="1" aria-label="Mais km">+</button></div><div class="kg"><label for="run-min">Tempo (min)</label><button type="button" class="step" data-f="min" data-d="-1" aria-label="Menos minutos">−</button><input id="run-min" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="min" data-d="1" aria-label="Mais minutos">+</button></div><p class="big" id="run-res"></p><div class="stats" id="run-stats"></div><p class="muted" id="run-cmp"></p><p class="muted">Anote ao terminar. O − e o + mudam 0,1 km e 1 minuto.</p></div>
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
-<p class="foot">Versão do app: 17/11 (book compacto). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
+<p class="foot">Versão do app: 17/11 (pop-ups). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -414,11 +416,12 @@ function calc(d){
  var lb=Object.keys(tr).sort().map(function(x){return 'Treino '+x});if(run)lb.push('Corrida');if(swim)lb.push('Natação');
  return {swim:swim,tot:kcal+(run?run.kcal:0)+(swim?swim.kcal:0),run:run,d:d,treino:lb.join(' + '),sets:sets,reps:reps,vol:vol,trab:trab,min:min,kcal:kcal,pot:pot,ex:ex}}
 
-function diario(){
+var POPS={},popN=0;function popBtn(lab,t,html){var id='p'+(++popN);POPS[id]={t:t,h:html};return '<button type="button" class="howbtn" data-pop="'+id+'">'+lab+'</button>'}
+function diario(){POPS={};popN=0;
  var D=document.getElementById('D'),dias=(function(){var o={};Object.keys(st.log).forEach(function(d){o[d]=1});Object.keys(st.run).forEach(function(d){if(runCalc(st.run[d]))o[d]=1});Object.keys(st.swim).forEach(function(d){if(swimCalc(st.swim[d]))o[d]=1});return Object.keys(o)})().sort().reverse(),cs=dias.map(calc),h='';
- h+='<div class="card"><h3>⚙️ Ajustes</h3><p class="muted">Cada série que você marca entra aqui com a carga e as repetições do momento. Os números são estimativas.</p>'
+ h+='<div class="card"><h3>⚙️ Ajustes</h3>'
   +'<div class="kg"><label for="peso">Seu peso (kg)</label><input id="peso" type="text" inputmode="decimal" value="'+String(st.peso).replace('.',',')+'"></div>'
-  +'<div class="kg"><label for="barra">Peso da barra (kg)</label><input id="barra" type="text" inputmode="decimal" value="'+String(st.barra).replace('.',',')+'"></div><p class="muted">No supino e na rosca Scott você anota as anilhas somadas e o app soma a barra. Barra olímpica comum: 20 kg; barras menores: 10 a 15 kg. Pergunte na academia e ajuste aqui.</p>'
+  +'<div class="kg"><label for="barra">Peso da barra (kg)</label><input id="barra" type="text" inputmode="decimal" value="'+String(st.barra).replace('.',',')+'"></div>'+popBtn('ℹ️ Sobre os ajustes','Ajustes','<p>Cada série que você marca entra no GYM BOOK com a carga e as repetições do momento. Os números são estimativas.</p><p>No supino e na rosca Scott você anota as anilhas somadas e o app soma a barra. Barra olímpica comum: 20 kg; barras menores: 10 a 15 kg. Pergunte na academia e ajuste aqui.</p>')
   +(window.__salvo?'<p class="big">✓ Treino gravado no GYM BOOK! Os campos foram zerados para o próximo treino.</p>':'')
   +'<div class="btnrow"><button class="reset" id="share" type="button">Enviar GYM BOOK (copiar / compartilhar)</button></div></div>';
  if(!cs.length){h+='<div class="card"><p>Nenhum treino registrado ainda. Marque as séries no Treino A ou B e volte aqui.</p></div>';D.innerHTML=h;bindD();return}
@@ -446,8 +449,8 @@ function diario(){
    +'<div class="stat"><b>~'+br(c.kcal)+' kcal</b><span>calorias em ~'+c.min+' min</span></div>'
    +'<div class="stat"><b>'+br(c.trab/1000,1)+' kJ</b><span>trabalho mecânico</span></div>'
    +'<div class="stat"><b>~'+br(c.pot)+' W</b><span>potência média na subida</span></div>'
-   +'</div><p class="muted">'+c.sets+' séries · '+c.reps+' repetições</p><details class="exd"><summary>Ver cada exercício ('+c.ex.length+')</summary><ul class="exl">'
-   +c.ex.map(function(e){return '<li><b>'+e.nome+':</b> '+e.txt+'</li>'}).join('')+'</ul></details>':'')
+   +'</div><p class="muted">'+c.sets+' séries · '+c.reps+' repetições</p>'+popBtn('📋 Ver cada exercício ('+c.ex.length+')',fmt(c.d)+' · '+c.treino,'<ul class="exl">'
+   +c.ex.map(function(e){return '<li><b>'+e.nome+':</b> '+e.txt+'</li>'}).join('')+'</ul>'):'')
    +(c.run?'<h3>🏃 Esteira</h3><div class="stats"><div class="stat"><b>'+br(c.run.km,2)+' km</b><span>em '+br(c.run.min)+' min</span></div>'
      +'<div class="stat"><b>'+br(c.run.v,1)+' km/h</b><span>média · ritmo '+pace(c.run.pace)+' por km</span></div>'
      +'<div class="stat"><b>~'+br(c.run.kcal)+' kcal</b><span>na esteira · '+br(c.run.kpm,1)+' kcal/min</span></div>'
@@ -460,14 +463,15 @@ function diario(){
    +'<p class="big">Total do dia: ~'+br(c.tot)+' kcal</p>'
    +'</div>'});
  h=selHtml+dh+h+hTop;
- h+='<div class="card"><h3>Como calculo</h3><ul class="exl">'
+ var comoH='<ul class="exl">'
   +'<li><b>Volume:</b> soma de carga × repetições de todas as séries.</li>'
   +'<li><b>Calorias:</b> musculação moderada (MET 3,5) × seu peso × tempo. O tempo vai da primeira à última série marcada (mínimo de 2 min por série). O aquecimento não entra.</li>'
   +'<li><b>Supino com barra:</b> anilhas somadas + o peso da barra.</li>'
   +'<li><b>Esteira:</b> média = km ÷ horas; ritmo = minutos ÷ km. Esforço (MET) pela fórmula do ACSM: caminhando abaixo de 7 km/h, correndo acima. Calorias = MET × 3,5 × seu peso ÷ 200 × minutos.</li>'
   +'<li><b>Trabalho:</b> carga × gravidade × 0,5 m de percurso por repetição (só a subida).</li>'
   +'<li><b>Potência:</b> esse trabalho dividido por 1,5 s de subida por repetição.</li>'
-  +'<li>Halteres: anote o peso de um halter só. Máquinas: o número da placa. São estimativas para comparar um treino com outro, não medidas exatas.</li></ul></div>';
+  +'<li>Halteres: anote o peso de um halter só. Máquinas: o número da placa. São estimativas para comparar um treino com outro, não medidas exatas.</li></ul>';
+ h+='<div class="card">'+popBtn('ℹ️ Como calculo','Como calculo',comoH)+'</div>';
  // gráfico de kcal por dia
  var byD={};cs.forEach(function(c){var d=c.d.slice(0,10);byD[d]=(byD[d]||0)+c.tot});
  var dk=Object.keys(byD).sort().slice(-14),km=Math.max.apply(null,dk.map(function(d){return byD[d]}))||1,soma=dk.reduce(function(a,d){return a+byD[d]},0);
@@ -485,7 +489,8 @@ function diario(){
    else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){document.getElementById('share').textContent='Copiado ✓'})}
   })}
 }
-document.addEventListener('click',function(e){var b=e.target.closest('.howbtn');if(b){var d=document.getElementById(b.dataset.how);if(d){if(d.showModal)d.showModal();else d.setAttribute('open','')}return}
+document.addEventListener('click',function(e){var b=e.target.closest('.howbtn');if(b&&b.dataset.pop){var P=POPS[b.dataset.pop],dd=document.getElementById('pop');if(P&&dd){dd.querySelector('h3').textContent=P.t;dd.querySelector('.popc').innerHTML=P.h;if(dd.showModal)dd.showModal();else dd.setAttribute('open','')}return}
+ if(b){var d=document.getElementById(b.dataset.how);if(d){if(d.showModal)d.showModal();else d.setAttribute('open','')}return}
  if(e.target.closest('.howx,.howok')){var d2=e.target.closest('dialog');if(d2){if(d2.close)d2.close();else d2.removeAttribute('open')}return}
  if(e.target.tagName==='DIALOG'&&e.target.classList.contains('how')){e.target.close()}});
 document.addEventListener('visibilitychange',function(){if(!document.hidden){if(aba==='D')diario();else render()}});
