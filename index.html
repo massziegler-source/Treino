@@ -54,6 +54,7 @@ h3{font:700 1.1rem/1.25 var(--display);margin:0;text-wrap:balance}
 .foot{color:var(--muted);font-size:.85rem}
 
 [hidden]{display:none!important}
+html{touch-action:manipulation}button{touch-action:manipulation}
 html,body{margin:0}
 .wrap{padding-top:max(20px,env(safe-area-inset-top,0px))}
 .log{margin-top:8px;border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:8px}
@@ -292,8 +293,9 @@ document.querySelectorAll('.log').forEach(function(l){
   var inp=b.dataset.f==='kg'?kg:rp,v=num(inp.value)||0,d=+b.dataset.d;
   if(b.dataset.f==='kg'){var st2=v<20?1:2.5;v=Math.max(0,Math.round((v+d*st2)*10)/10)}else v=Math.max(1,v+d);
   inp.value=b.dataset.f==='kg'?String(v).replace('.',','):String(v);upd()})});
- l.querySelectorAll('.setbtn').forEach(function(b){b.addEventListener('click',function(){
-  upd();var h=hoje(),d=st.log[h]=st.log[h]||{};d[k]=d[k]||{};
+ l.querySelectorAll('.setbtn').forEach(function(b){var lt=0;b.addEventListener('click',function(){
+  var now=Date.now();if(now-lt<800)return;lt=now;
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();upd();var h=hoje(),d=st.log[h]=st.log[h]||{};d[k]=d[k]||{};
   if(d[k][b.dataset.s])delete d[k][b.dataset.s];else d[k][b.dataset.s]={kg:num(kg.value),r:num(rp.value),t:Date.now()};if(isB(k))d[k][b.dataset.s].b=st.barra;
   if(!Object.keys(d[k]).length)delete d[k];if(!Object.keys(d).length)delete st.log[h];
   save();render();if(navigator.vibrate)navigator.vibrate(15)})});
