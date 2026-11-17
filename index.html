@@ -91,6 +91,8 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 .fim{font:800 1.25rem var(--display);letter-spacing:.03em;width:100%;min-height:64px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.18);touch-action:manipulation}
 .fim:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
 .fim.conf{background:#c25e00;color:#fff}
+.aviso{border:3px solid #c25e00;border-radius:14px;padding:14px;display:grid;gap:8px;background:var(--bg)}
+.aviso p{margin:0}.avt{font:800 1.1rem var(--display);color:#c25e00}
 .run h2{font-size:1.1rem}
 .log .kg,.run .kg{display:grid;grid-template-columns:minmax(0,1fr) 48px 84px 48px;gap:8px;align-items:center}.log .kg label,.run .kg label{min-width:0}.log .kg input,.run .kg input{width:100%;box-sizing:border-box;padding:6px 4px}
 .big{font:800 1.1rem var(--display);color:var(--accent)}
@@ -250,7 +252,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <section id="R" aria-label="Aeróbica" hidden><div class="card run" id="swim"><h2>🏊 Natação <small style="font:600 .85rem var(--body);color:var(--muted)">piscina de 25 m</small></h2><div class="kg"><label for="sw-c">Crawl<br><small>piscinas (só um lado)</small></label><button type="button" class="step" data-f="c" data-d="-1" aria-label="Menos">−</button><input id="sw-c" type="text" inputmode="numeric" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="c" data-d="1" aria-label="Mais">+</button></div><div class="kg"><label for="sw-p">Peito<br><small>piscinas (só um lado)</small></label><button type="button" class="step" data-f="p" data-d="-1" aria-label="Menos">−</button><input id="sw-p" type="text" inputmode="numeric" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="p" data-d="1" aria-label="Mais">+</button></div><div class="kg"><label for="sw-min">Tempo total (min)</label><button type="button" class="step" data-f="min" data-d="-1" aria-label="Menos">−</button><input id="sw-min" type="text" inputmode="numeric" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="min" data-d="1" aria-label="Mais">+</button></div><p class="big" id="sw-res"></p><div class="stats" id="sw-stats"></div><p class="muted" id="sw-cmp"></p><p class="muted">Conte cada travessia de 25 m como 1.</p></div>
 <div class="card run" id="run"><h2>🏃 Esteira / corrida</h2><div class="kg"><label for="run-km">Distância (km)</label><button type="button" class="step" data-f="km" data-d="-1" aria-label="Menos km">−</button><input id="run-km" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="km" data-d="1" aria-label="Mais km">+</button></div><div class="kg"><label for="run-min">Tempo (min)</label><button type="button" class="step" data-f="min" data-d="-1" aria-label="Menos minutos">−</button><input id="run-min" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0" autocomplete="off"><button type="button" class="step" data-f="min" data-d="1" aria-label="Mais minutos">+</button></div><p class="big" id="run-res"></p><div class="stats" id="run-stats"></div><p class="muted" id="run-cmp"></p><p class="muted">Anote ao terminar. O − e o + mudam 0,1 km e 1 minuto.</p></div>
 </section>
-<div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
+<div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <div class="rules"><h2>Regras para todo exercício</h2><ul>
 <li>Peso em que as 2 últimas repetições fiquem difíceis, mas com técnica perfeita.</li>
 <li>Fez todas as séries no topo da faixa em duas sessões seguidas? Aumente um pouco a carga.</li>
@@ -258,7 +260,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <li>Suba em 1 a 2 s e desça em 2 a 3 s, sem tranco.</li>
 <li>Com Mounjaro: beba água durante o treino e coma proteína depois. Tontura ou fraqueza: pare e sente.</li>
 </ul></div>
-<p class="foot">Versão do app: 17/11 (musculação + aeróbica). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 17/11 (aviso ao terminar). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -368,8 +370,17 @@ var fb=document.getElementById('fim'),ft=document.getElementById('fimtxt'),fT=nu
 fb.addEventListener('click',function(){
  var k=st.cur,tem=k&&((st.log[k]&&Object.keys(st.log[k]).length)||st.run[k]||st.swim[k]);
  if(!tem){ft.textContent='Ainda não há séries, corrida ou natação marcadas hoje para gravar.';setTimeout(function(){ft.textContent=T0},3000);return}
- if(!fT){fb.textContent='Toque de novo para confirmar';fb.classList.add('conf');fT=setTimeout(function(){fb.textContent=F0;fb.classList.remove('conf');fT=null},4000);return}
- clearTimeout(fT);fT=null;fb.textContent=F0;fb.classList.remove('conf');
+ var L=st.log[k]||{},ns=0,tr={};Object.keys(L).forEach(function(x){ns+=Object.keys(L[x]).length;tr[x[0]]=1});
+ var sw=swimCalc(st.swim[k]),ru=runCalc(st.run[k]);
+ document.getElementById('fimlist').innerHTML=
+  '<li>🏋️ <b>Musculação:</b> '+(ns?ns+' séries ('+Object.keys(tr).sort().map(function(x){return 'Treino '+x}).join(' + ')+')':'nada marcado')+'</li>'
+  +'<li>🏊 <b>Natação:</b> '+(sw?br(sw.dist)+' m em '+br(sw.min)+' min':'nada marcado')+'</li>'
+  +'<li>🏃 <b>Corrida:</b> '+(ru?br(ru.km,2)+' km em '+br(ru.min)+' min':'nada marcado')+'</li>';
+ document.getElementById('fimbox').hidden=false;fb.hidden=true;document.getElementById('fimbox').scrollIntoView({block:'center'});
+});
+document.getElementById('fimnao').addEventListener('click',function(){document.getElementById('fimbox').hidden=true;fb.hidden=false});
+document.getElementById('fimsim').addEventListener('click',function(){
+ var k=st.cur;document.getElementById('fimbox').hidden=true;fb.hidden=false;if(!k)return;
  st.closed[k]=Date.now();st.cur=null;st.kg={};st.rp={};save();
  document.querySelectorAll('.log').forEach(function(l){var x=l.dataset.k;l.querySelector('#kg-'+x).value='';l.querySelector('#rp-'+x).value=l.dataset.r;var bi=l.querySelector('.barinfo');if(bi)bi.textContent='+ barra '+br(st.barra,1)+' kg (o peso da barra se muda no GYM BOOK)'});
  if(window.__runLoad)window.__runLoad();if(window.__swimLoad)window.__swimLoad();window.__salvo=true;show('D');window.scrollTo(0,0);window.__salvo=false;if(navigator.vibrate)navigator.vibrate([30,60,30]);
