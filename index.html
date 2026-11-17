@@ -236,7 +236,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 <li>Suba em 1 a 2 s e desça em 2 a 3 s, sem tranco.</li>
 <li>Com Mounjaro: beba água durante o treino e coma proteína depois. Tontura ou fraqueza: pare e sente.</li>
 </ul></div>
-<p class="foot">Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 17/11 (rosca sentado). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -379,6 +379,8 @@ function diario(){
 document.addEventListener('visibilitychange',function(){if(!document.hidden){if(aba==='D')diario();else render()}});
 var a0=null;try{a0=localStorage.getItem('treinoAba')}catch(e){}
 show(a0==='B'||a0==='D'?a0:'A');
-if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js')}catch(e){}}
+if('serviceWorker' in navigator){try{var hadC=!!navigator.serviceWorker.controller,rl=false;
+ navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadC&&!rl){rl=true;location.reload()}});
+ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(!document.hidden)r.update()})})}catch(e){}}
 })();
 </script></body></html>
