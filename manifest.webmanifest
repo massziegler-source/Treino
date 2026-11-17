@@ -1,6 +1,6 @@
 {
- "name": "Treino A e B do Max",
- "short_name": "Treino",
+ "name": "MAXGYM",
+ "short_name": "MAXGYM",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
