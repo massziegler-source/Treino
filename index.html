@@ -101,6 +101,8 @@ body.diario .ex .howbtn{display:none}
 .exd summary{list-style:none;cursor:pointer;padding:12px 14px;min-height:44px;font:700 1rem var(--body);color:var(--accent);display:flex;justify-content:space-between;align-items:center}
 .exd summary::-webkit-details-marker{display:none}.exd summary::after{content:'▾';font-size:1.2rem;transition:transform .2s}.exd[open] summary::after{transform:rotate(180deg)}
 .exd .exl{padding:0 14px 12px 32px}
+.ex img.foto{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;cursor:pointer}
+@media (min-width:640px){.ex img.foto{height:100%;aspect-ratio:auto}}
 body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,body.diario #run,body.diario #fimwrap{display:none}
 .fim{font:800 1.25rem var(--display);letter-spacing:.03em;width:100%;min-height:64px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.18);touch-action:manipulation}
 .fim:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
@@ -271,7 +273,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 17/11 (calorias em cima). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 18/11 (fotos de volta). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -489,6 +491,9 @@ function diario(){POPS={};popN=0;
    else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){document.getElementById('share').textContent='Copiado ✓'})}
   })}
 }
+document.querySelectorAll('article.ex').forEach(function(a){var di=a.querySelector('dialog.how img');if(!di||a.querySelector('.foto'))return;
+ var im=document.createElement('img');im.className='foto';im.src=di.src;im.alt=di.alt;im.setAttribute('role','button');im.title='Toque para ver como fazer';
+ im.addEventListener('click',function(){var d=a.querySelector('dialog.how');if(d.showModal)d.showModal();else d.setAttribute('open','')});a.insertBefore(im,a.firstChild)});
 document.addEventListener('click',function(e){var b=e.target.closest('.howbtn');if(b&&b.dataset.pop){var P=POPS[b.dataset.pop],dd=document.getElementById('pop');if(P&&dd){dd.querySelector('h3').textContent=P.t;dd.querySelector('.popc').innerHTML=P.h;if(dd.showModal)dd.showModal();else dd.setAttribute('open','')}return}
  if(b){var d=document.getElementById(b.dataset.how);if(d){if(d.showModal)d.showModal();else d.setAttribute('open','')}return}
  if(e.target.closest('.howx,.howok')){var d2=e.target.closest('dialog');if(d2){if(d2.close)d2.close();else d2.removeAttribute('open')}return}
