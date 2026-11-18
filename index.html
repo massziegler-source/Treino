@@ -273,7 +273,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 18/11 (foto do step). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 18/11 (valores no volume). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -441,8 +441,8 @@ function diario(){POPS={};popN=0;
   +'<p class="muted">'+dk.length+' dia(s) de treino · média ~'+br(soma/dk.length)+' kcal por dia · total ~'+br(soma)+' kcal'+(Object.keys(byD).length>14?' (mostrando os últimos 14)':'')+'</p></div>';
  // evolução: gráfico de volume
  var ult=cs.filter(function(c){return c.vol>0}).slice(0,10).reverse(),mx=Math.max.apply(null,ult.map(function(c){return c.vol}))||1;
- h+='<div class="card"><h3>Evolução do volume <small>(kg levantados por treino)</small></h3><div class="bars" style="margin-bottom:22px">'
-  +ult.map(function(c){return '<div class="bar" style="height:'+Math.max(3,c.vol/mx*100)+'%" title="'+br(c.vol)+' kg"><i>'+fmt(c.d)+'</i></div>'}).join('')+'</div></div>';
+ h+='<div class="card"><h3>Evolução do volume <small>(kg levantados por treino)</small></h3><div class="bars" style="margin:22px 0 22px">'
+  +ult.map(function(c){return '<div class="bar" style="height:'+Math.max(3,c.vol/mx*100)+'%" title="'+br(c.vol)+' kg"><em>'+br(c.vol)+'</em><i>'+fmt(c.d)+'</i></div>'}).join('')+'</div></div>';
  // evolução por exercício
  var first={},last={};dias.slice().reverse().forEach(function(d){Object.keys(st.log[d]||{}).forEach(function(k){
   var ss=st.log[d][k],m=0;Object.keys(ss).forEach(function(i){m=Math.max(m,eff(k,ss[i])||0)});if(!m)return;if(!(k in first))first[k]={d:d,kg:m};last[k]={d:d,kg:m}})});
