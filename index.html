@@ -290,7 +290,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 19/11 (novo tríceps). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 19/11 (peso e Claude). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -302,7 +302,7 @@ function num(v){v=String(v||'').replace(',','.').replace(/[^0-9.]/g,'');var n=pa
 function pace(m){var mm=Math.floor(m),ss=Math.round((m-mm)*60);if(ss===60){mm++;ss=0}return mm+':'+pad(ss)}
 function br(n,dec){return n.toLocaleString('pt-BR',{maximumFractionDigits:dec||0,minimumFractionDigits:0})}
 var st={};try{st=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
-st.kg=st.kg||{};st.rp=st.rp||{};st.log=st.log||{};
+st.kg=st.kg||{};st.rp=st.rp||{};st.log=st.log||{};st.pesos=st.pesos||{};if(st.pesos['2026-11-10']==null)st.pesos['2026-11-10']=93.8;
 if(!st.migA9){Object.keys(st.log).forEach(function(d){var x=st.log[d];if(x&&x.A8&&!x.A9){x.A9=x.A8;delete x.A8}});
  if(st.kg.A8!=null&&st.kg.A9==null){st.kg.A9=st.kg.A8;delete st.kg.A8}if(st.rp.A8!=null&&st.rp.A9==null){st.rp.A9=st.rp.A8;delete st.rp.A8}
  st.migA9=1;try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}}
@@ -503,7 +503,12 @@ function diario(){POPS={};popN=0;
      +'<div class="stat"><b>'+br(c.swim.met,1)+' MET</b><span>esforço médio</span></div></div><p class="muted">'+cmpSwim(c.swim,c.d)+'</p>':'')
    +'<p class="big">Total do dia: ~'+br(c.tot)+' kcal</p>'
    +'</div>'});
- h=selHtml+dh+h+hTop;
+ var pk=Object.keys(st.pesos).sort(),p0=st.pesos[pk[0]],pl=st.pesos[pk[pk.length-1]],ph=st.pesos[hj];
+ var pesoH='<div class="card"><h3>⚖️ Peso</h3><div class="kg"><label for="pesohj">Peso de hoje (kg)<br><small>pese de manhã, em jejum</small></label><input id="pesohj" type="text" inputmode="decimal" enterkeyhint="done" placeholder="'+String(pl).replace('.',',')+'" value="'+(ph!=null?String(ph).replace('.',','):'')+'"></div>'
+  +'<p class="big">'+br(pl,1)+' kg'+(pk.length>1?' · '+(pl-p0>0?'+':'')+br(pl-p0,1)+' kg desde '+fmt(pk[0]):'')+'</p>'
+  +popBtn('📋 Ver todas as pesagens','Pesagens','<ul class="exl">'+pk.slice().reverse().map(function(d){return '<li><b>'+fmt(d)+':</b> '+br(st.pesos[d],1)+' kg</li>'}).join('')+'</ul>')
+  +'<button class="fim" id="share2" type="button" style="margin-top:10px">🤖 Enviar para o Claude analisar</button><p class="muted">Copia tudo (peso, treinos, cargas, aeróbica e calorias). Depois é só colar aqui no chat.</p></div>';
+ h=selHtml+pesoH+dh+h+hTop;
  var comoH='<ul class="exl">'
   +'<li><b>Volume:</b> soma de carga × repetições de todas as séries.</li>'
   +'<li><b>Calorias:</b> musculação moderada (MET 3,5) × seu peso × tempo. O tempo vai da primeira à última série marcada (mínimo de 2 min por série). O aquecimento não entra.</li>'
@@ -517,12 +522,20 @@ function diario(){POPS={};popN=0;
  function bindD(){var ds=document.getElementById('diasel');if(ds)ds.addEventListener('change',function(){window.__dsel=ds.value;diario()});var p=document.getElementById('peso');p.addEventListener('input',function(){var v=num(p.value);if(v&&v>30){st.peso=v;save()}});
   p.addEventListener('change',diario);
   var bb=document.getElementById('barra');bb.addEventListener('input',function(){var v=num(bb.value);if(v!=null){st.barra=v;save()}});bb.addEventListener('change',diario);
-  document.getElementById('share').addEventListener('click',function(){
-   var t='GYM BOOK do Max\n'+cs.map(function(c){return '\n'+fmt(c.d)+' · '+c.treino+' · volume '+br(c.vol)+' kg · ~'+br(c.kcal)+' kcal ('+c.min+' min) · '+br(c.trab/1000,1)+' kJ · ~'+br(c.pot)+' W\n'
-    +c.ex.map(function(e){return '- '+e.nome+': '+e.txt}).join('\n')+(c.run?'\n- Esteira: '+br(c.run.km,2)+' km em '+br(c.run.min)+' min, média '+br(c.run.v,1)+' km/h (ritmo '+pace(c.run.pace)+'/km), ~'+br(c.run.kcal)+' kcal':'')+(c.swim?'\n- Natação: '+br(c.swim.dist)+' m ('+c.swim.c+' crawl + '+c.swim.p+' peito) em '+br(c.swim.min)+' min, '+pace(c.swim.p100)+'/100 m, ~'+br(c.swim.kcal)+' kcal':'')+'\n- Total do dia: ~'+br(c.tot)+' kcal'}).join('\n');
-   if(navigator.share){navigator.share({title:'GYM BOOK',text:t}).catch(function(){})}
-   else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){document.getElementById('share').textContent='Copiado ✓'})}
-  })}
+  function mkText(){var pk=Object.keys(st.pesos).sort(),p0=st.pesos[pk[0]],p1=st.pesos[pk[pk.length-1]];
+   var byD={};cs.forEach(function(c){var d=c.d.slice(0,10);byD[d]=(byD[d]||0)+c.tot});var dk=Object.keys(byD).sort(),som=dk.reduce(function(a,d){return a+byD[d]},0);
+   return 'Claude, analise meu GYM BOOK (Max, 62 anos, 173 cm, Mounjaro desde nov/2026, dieta de proteínas sem álcool e sem laticínios, meta 73 kg).\n\n'
+    +'PESO: '+pk.map(function(d){return fmt(d)+' '+br(st.pesos[d],1)+' kg'}).join(' · ')+(pk.length>1?'\nVariação: '+(p1-p0>0?'+':'')+br(p1-p0,1)+' kg desde '+fmt(pk[0]):'')
+    +'\n\nRESUMO: '+dk.length+' dia(s) de treino desde '+(dk.length?fmt(dk[0]):'-')+' · ~'+br(som)+' kcal gastas no total no treino · média ~'+br(dk.length?som/dk.length:0)+' kcal por dia de treino\n'
+    +'\nTREINOS (mais recente primeiro)\n'+cs.map(function(c){return '\n'+fmt(c.d)+' · '+c.treino+' · volume '+br(c.vol)+' kg · ~'+br(c.kcal)+' kcal ('+c.min+' min) · '+br(c.trab/1000,1)+' kJ · ~'+br(c.pot)+' W\n'
+    +c.ex.map(function(e){return '- '+e.nome+': '+e.txt}).join('\n')+(c.run?'\n- Esteira: '+br(c.run.km,2)+' km em '+br(c.run.min)+' min, média '+br(c.run.v,1)+' km/h (ritmo '+pace(c.run.pace)+'/km), ~'+br(c.run.kcal)+' kcal':'')+(c.swim?'\n- Natação: '+br(c.swim.dist)+' m ('+c.swim.c+' crawl + '+c.swim.p+' peito) em '+br(c.swim.min)+' min, '+pace(c.swim.p100)+'/100 m, ~'+br(c.swim.kcal)+' kcal':'')+'\n- Total do dia: ~'+br(c.tot)+' kcal'}).join('\n')}
+  function enviar(btn){var t=mkText(),ok=function(){btn.textContent='✓ Copiado! Agora cole no chat do Claude'};
+   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(navigator.share)navigator.share({title:'GYM BOOK',text:t}).catch(function(){})})}
+   else if(navigator.share){navigator.share({title:'GYM BOOK',text:t}).catch(function(){})}}
+  document.getElementById('share').addEventListener('click',function(){var t=mkText();if(navigator.share)navigator.share({title:'GYM BOOK',text:t}).catch(function(){});else enviar(this)});
+  var s2=document.getElementById('share2');if(s2)s2.addEventListener('click',function(){enviar(s2)});
+  var pz=document.getElementById('pesohj');if(pz)pz.addEventListener('change',function(){var v=num(pz.value);if(v&&v>30&&v<250){st.pesos[hoje()]=v;st.peso=v;save();diario()}});
+ }
 }
 document.querySelectorAll('article.ex').forEach(function(a){var di=a.querySelector('dialog.how img');if(!di||a.querySelector('.foto'))return;
  var im=document.createElement('img');im.className='foto';im.src=di.src;im.alt=di.alt;im.setAttribute('role','button');im.title='Toque para ver como fazer';
