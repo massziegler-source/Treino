@@ -308,7 +308,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 22/11 (asterisco nas calorias). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 22/11 (resumo do dia corrigido). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -474,7 +474,7 @@ function calc(d){
  if(!sets)min=0;var kcal=MET*st.peso*min/60;
  var run=runCalc(st.run[d]),swim=swimCalc(st.swim[d]);
  var pot=reps?trab/(reps*TSUBIDA):0;
- var lb=Object.keys(tr).sort().map(function(x){return 'Treino '+x});if(run)lb.push('Corrida');if(swim)lb.push('Natação');
+ var lb=Object.keys(tr).sort();if(lb.length>1){var ca=ex.filter(function(e){return e.k[0]==='A'}).length,cb=ex.length-ca;if(Math.min(ca,cb)<=1)lb=[ca>cb?'A':'B']}lb=lb.map(function(x){return 'Treino '+x});if(run)lb.push('Corrida');if(swim)lb.push('Natação');
  return {swim:swim,tot:kcal+(run?run.kcal:0)+(swim?swim.kcal:0),run:run,d:d,treino:lb.join(' + '),sets:sets,reps:reps,vol:vol,trab:trab,min:min,kcal:kcal,pot:pot,ex:ex}}
 
 var POPS={},popN=0;function popBtn(lab,t,html){var id='p'+(++popN);POPS[id]={t:t,h:html};return '<button type="button" class="howbtn" data-pop="'+id+'">'+lab+'</button>'}
@@ -555,8 +555,8 @@ function diario(){POPS={};popN=0;
    return 'Claude, analise meu GYM BOOK (Max, 62 anos, 173 cm, Mounjaro desde nov/2026, dieta de proteínas sem álcool e sem laticínios, meta 73 kg).\n\n'
     +'PESO: '+pk.map(function(d){return fmt(d)+' '+br(st.pesos[d],1)+' kg'}).join(' · ')+(pk.length>1?'\nVariação: '+(p1-p0>0?'+':'')+br(p1-p0,1)+' kg desde '+fmt(pk[0]):'')
     +'\n\nRESUMO: '+dk.length+' dia(s) de treino desde '+(dk.length?fmt(dk[0]):'-')+' · ~'+br(som)+' kcal gastas no total no treino · média ~'+br(dk.length?som/dk.length:0)+' kcal por dia de treino\n'
-    +'\nTREINOS (mais recente primeiro)\n'+cs.map(function(c){return '\n'+fmt(c.d)+' · '+c.treino+' · volume '+br(c.vol)+' kg · ~'+br(c.kcal)+' kcal ('+c.min+' min) · '+br(c.trab/1000,1)+' kJ · ~'+br(c.pot)+' W\n'
-    +c.ex.map(function(e){return '- '+e.nome+': '+e.txt}).join('\n')+(c.run?'\n- Esteira: '+br(c.run.km,2)+' km em '+br(c.run.min)+' min, média '+br(c.run.v,1)+' km/h (ritmo '+pace(c.run.pace)+'/km), ~'+br(c.run.kcal)+' kcal':'')+(c.swim?'\n- Natação: '+br(c.swim.dist)+' m ('+c.swim.c+' crawl + '+c.swim.p+' peito) em '+br(c.swim.min)+' min, '+pace(c.swim.p100)+'/100 m, ~'+br(c.swim.kcal)+' kcal':'')+'\n- Total do dia: ~'+br(c.tot)+' kcal'}).join('\n')}
+    +'\nTREINOS (mais recente primeiro)\n'+cs.map(function(c){return '\n'+fmt(c.d)+' · '+c.treino+' · ~'+br(c.tot)+' kcal no dia\n'+(c.sets?'- Musculação: volume '+br(c.vol)+' kg · ~'+br(c.kcal)+' kcal ('+c.min+' min) · '+br(c.trab/1000,1)+' kJ · ~'+br(c.pot)+' W\n':'')
+    +c.ex.map(function(e){return '- '+e.nome+': '+e.txt}).join('\n')+(c.run?'\n- Esteira: '+br(c.run.km,2)+' km em '+br(c.run.min)+' min, média '+br(c.run.v,1)+' km/h (ritmo '+pace(c.run.pace)+'/km), ~'+br(c.run.kcal)+' kcal':'')+(c.swim?'\n- Natação: '+br(c.swim.dist)+' m ('+c.swim.c+' crawl + '+c.swim.p+' peito) em '+br(c.swim.min)+' min, '+pace(c.swim.p100)+'/100 m, ~'+br(c.swim.kcal)+' kcal':'')+'\n- Total do dia: ~'+br(c.tot)+' kcal'}).join('\n').replace(/\n\n- /g,'\n- ')}
   function enviar(btn){var t=mkText(),ok=function(){btn.textContent='✓ Copiado! Agora cole no chat do Claude'};
    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(navigator.share)navigator.share({title:'GYM BOOK',text:t}).catch(function(){})})}
    else if(navigator.share){navigator.share({title:'GYM BOOK',text:t}).catch(function(){})}}
