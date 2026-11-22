@@ -112,6 +112,8 @@ body.diario .ex .howbtn{display:none}
 .setbtn[aria-pressed="true"] small.prev{color:inherit}
 .inw{position:relative;min-width:0}.inw .ant{position:absolute;left:0;right:0;top:-15px;text-align:center;font:600 .66rem/1 var(--body);color:var(--muted);white-space:nowrap;pointer-events:none}
 .log .kg{margin-top:6px}
+.bar i{bottom:auto;top:calc(100% + 4px);text-align:center;line-height:1.2}
+.bar i .so{display:block;font-size:.55rem;font-weight:600;line-height:1.1;margin-top:1px}
 body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,body.diario #run,body.diario #fimwrap{display:none}
 .fim{font:800 1.25rem var(--display);letter-spacing:.03em;width:100%;min-height:64px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.18);touch-action:manipulation}
 .fim:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
@@ -306,7 +308,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 21/11 (rosca martelo sentado). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 22/11 (asterisco nas calorias). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -491,10 +493,12 @@ function diario(){POPS={};popN=0;
  var selHtml=(window.__salvo?'<div class="card"><p class="big">✓ Treino gravado no GYM BOOK! Os campos foram zerados para o próximo treino.</p></div>':'')+'<div class="card"><h2>📒 GYM BOOK</h2><label for="diasel"><b>Escolha o dia</b></label><select id="diasel" class="sel">'+opts+'</select></div>'
   +(window.__dsel==='vazio'?'<div class="card"><h3>Hoje ('+fmt(hj)+')</h3><p>Ainda não há treino registrado hoje. Escolha acima um dia anterior para ver.</p></div>':'');
  // gráfico de kcal por dia
- var byD={};cs.forEach(function(c){var d=c.d.slice(0,10);byD[d]=(byD[d]||0)+c.tot});
+ var byD={},tipo={};cs.forEach(function(c){var d=c.d.slice(0,10);byD[d]=(byD[d]||0)+c.tot;tipo[d]=tipo[d]||{m:0,a:0};if(c.sets)tipo[d].m=1;if(c.run||c.swim)tipo[d].a=1});
+ var so=function(d){var t=tipo[d];return t.m&&!t.a?'musc.':(t.a&&!t.m?'aeró.':'')},temSo=false;
  var dk=Object.keys(byD).sort().slice(-14),km=Math.max.apply(null,dk.map(function(d){return byD[d]}))||1,soma=dk.reduce(function(a,d){return a+byD[d]},0);
- h+='<div class="card"><h3>🔥 Calorias por dia <small>(musculação + aeróbica)</small></h3><div class="bars kc" style="margin:22px 0 22px">'
-  +dk.map(function(d){return '<div class="bar" style="height:'+Math.max(3,byD[d]/km*100)+'%"><em>'+br(byD[d])+'</em><i>'+fmt(d)+'</i></div>'}).join('')+'</div>'
+ h+='<div class="card"><h3>🔥 Calorias por dia <small>(musculação + aeróbica)</small></h3><div class="bars kc" style="margin:22px 0 38px">'
+  +dk.map(function(d){var x=so(d);if(x)temSo=true;return '<div class="bar" style="height:'+Math.max(3,byD[d]/km*100)+'%"><em>'+br(byD[d])+(x?'*':'')+'</em><i>'+fmt(d)+(x?'<span class="so">(só '+x+')</span>':'')+'</i></div>'}).join('')+'</div>'
+  +(temSo?'<p class="muted" style="font-size:.8rem">* dia com só musculação (musc.) ou só aeróbica (aeró.)</p>':'')
   +'<p class="muted">'+dk.length+' dia(s) de treino · média ~'+br(soma/dk.length)+' kcal por dia · total ~'+br(soma)+' kcal'+(Object.keys(byD).length>14?' (mostrando os últimos 14)':'')+'</p></div>';
  // evolução: gráfico de volume
  var ult=cs.filter(function(c){return c.vol>0}).slice(0,10).reverse(),mx=Math.max.apply(null,ult.map(function(c){return c.vol}))||1;
