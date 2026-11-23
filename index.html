@@ -308,7 +308,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 23/11 (desenvolvimento com barra). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 23/11 (peso 90,9). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -320,7 +320,7 @@ function num(v){v=String(v||'').replace(',','.').replace(/[^0-9.]/g,'');var n=pa
 function pace(m){var mm=Math.floor(m),ss=Math.round((m-mm)*60);if(ss===60){mm++;ss=0}return mm+':'+pad(ss)}
 function br(n,dec){return n.toLocaleString('pt-BR',{maximumFractionDigits:dec||0,minimumFractionDigits:0})}
 var st={};try{st=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
-st.kg=st.kg||{};st.rp=st.rp||{};st.log=st.log||{};st.pesos=st.pesos||{};if(st.pesos['2026-11-10']==null)st.pesos['2026-11-10']=93.8;
+st.kg=st.kg||{};st.rp=st.rp||{};st.log=st.log||{};st.pesos=st.pesos||{};if(st.pesos['2026-11-10']==null)st.pesos['2026-11-10']=93.8;if(!st.seed2311){if(st.pesos['2026-11-23']==null)st.pesos['2026-11-23']=90.9;var _pk=Object.keys(st.pesos).sort();st.peso=st.pesos[_pk[_pk.length-1]];st.seed2311=1;try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}}
 if(!st.migA9){Object.keys(st.log).forEach(function(d){var x=st.log[d];if(x&&x.A8&&!x.A9){x.A9=x.A8;delete x.A8}});
  if(st.kg.A8!=null&&st.kg.A9==null){st.kg.A9=st.kg.A8;delete st.kg.A8}if(st.rp.A8!=null&&st.rp.A9==null){st.rp.A9=st.rp.A8;delete st.rp.A8}
  st.migA9=1;try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}}
