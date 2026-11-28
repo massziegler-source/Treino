@@ -309,7 +309,7 @@ body.diario .note,body.diario .progress,body.diario .rules,body.diario .foot,bod
 </section>
 <div class="card" id="fimwrap"><button type="button" id="fim" class="fim">✅ TERMINAR O TREINO</button><div id="fimbox" class="aviso" hidden><p class="avt">⚠️ Atenção: isto encerra o dia nas DUAS áreas</p><p>Ao confirmar, a <b>MUSCULAÇÃO</b> e a <b>AERÓBICA</b> (natação e corrida) de hoje são gravadas juntas no GYM BOOK e todos os campos são zerados. O que for marcado depois vira um novo treino.</p><p><b>Vai ser gravado:</b></p><ul class="exl" id="fimlist"></ul><p class="muted">Se ainda vai nadar ou correr hoje, toque em "Ainda não" e termine só no fim do dia.</p><div class="btnrow"><button type="button" id="fimsim" class="fim">Sim, terminar o dia</button><button type="button" id="fimnao" class="reset" style="width:100%;min-height:52px;font-weight:700">Ainda não</button></div></div><p class="muted" id="fimtxt">Grava o treino de hoje no GYM BOOK (musculação e aeróbica) e zera tudo para o próximo treino.</p></div>
 <dialog class="how" id="pop"><div class="howin"><div class="howtop"><h3></h3><button type="button" class="howx" aria-label="Fechar">✕</button></div><div class="popc"></div><button type="button" class="howok">Fechar</button></div></dialog>
-<p class="foot">Versão do app: 28/11 (rosca direta com barra reta). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
+<p class="foot">Versão do app: 28/11 (barra reta 8 kg). Orientação geral, não substitui um educador físico. Dor em articulação (não cansaço): pare aquele exercício.</p>
 </div>
 <script>
 (function(){
@@ -351,7 +351,8 @@ function swimCalc(w){if(!w||!w.min||!((w.c||0)+(w.p||0)))return null;var c=(w.c|
 function cmpSwim(c,k){var ks=Object.keys(st.swim).filter(function(d){return d!==k&&d<(k||'9')&&swimCalc(st.swim[d])}).sort();if(!ks.length)return '';var L=swimCalc(st.swim[ks[ks.length-1]]),dd=c.dist-L.dist,dp=c.p100-L.p100;
  return 'Última natação ('+fmt(ks[ks.length-1])+'): '+br(L.dist)+' m, '+pace(L.p100)+' por 100 m. Hoje: '+(dd>=0?'+':'')+br(dd)+' m e '+(dp<=0?pace(-dp)+' mais rápido':pace(dp)+' mais lento')+' por 100 m.'}
 function isB(k){return BARRA.indexOf(k)>=0}
-function eff(k,x){return x.kg==null?null:x.kg+(isB(k)?(x.b!=null?x.b:st.barra):0)}
+var BARW={A6:8};function bw(k){return BARW[k]!=null?BARW[k]:st.barra}function bwt(k){return BARW[k]!=null?' (barra reta curta)':' (o peso da barra se muda no GYM BOOK)'}
+function eff(k,x){return x.kg==null?null:x.kg+(isB(k)?(x.b!=null?x.b:bw(k)):0)}
 // migra versão anterior (cargas e séries marcadas hoje)
 try{var old=JSON.parse(localStorage.getItem('treinoApp2')||'null');if(old&&!st.migrado){
  Object.keys(old.kg||{}).forEach(function(k){if(!st.kg[k])st.kg[k]=String(old.kg[k])});
@@ -374,7 +375,7 @@ function fillSug(l){var k=l.dataset.k,kg=l.querySelector('#kg-'+k),rp=l.querySel
  if(st.rp[k]==null){if(pv&&pv.r!=null){rp.value=String(pv.r);rp.classList.add('sug')}else{rp.value=l.dataset.r;rp.classList.remove('sug')}}else rp.classList.remove('sug');
  var ak=document.getElementById('ant-kg-'+k),ar=document.getElementById('ant-rp-'+k);
  if(ak){ak.textContent=pv&&pv.kg!=null?'S'+nx+' antes: '+br(pv.kg,1)+' kg':'';ar.textContent=pv&&pv.r!=null?'S'+nx+' antes: '+pv.r:''}
- var bi=l.querySelector('.barinfo');if(bi&&isB(k)){var v=num(kg.value);bi.textContent='+ barra '+br(st.barra,1)+' kg'+(v!=null?' = '+br(v+st.barra,1)+' kg no total':'')+' (o peso da barra se muda no GYM BOOK)'}}
+ var bi=l.querySelector('.barinfo');if(bi&&isB(k)){var v=num(kg.value);bi.textContent='+ barra '+br(bw(k),1)+' kg'+(v!=null?' = '+br(v+bw(k),1)+' kg no total':'')+bwt(k)}}
 function render(){
  var tot=0,done=0,day=(st.cur&&st.log[st.cur])||{};
  document.querySelectorAll('.log').forEach(function(l){
@@ -384,7 +385,7 @@ function render(){
    sm.textContent=on?((e==null?'?':br(e,1))+' kg × '+(x.r==null?'?':x.r)):(pv?((pv.kg==null?'?':br(eff(k,pv),1))+' kg × '+(pv.r==null?'?':pv.r)):'');
    if(!on)all=false;if(k[0]===aba){tot++;if(on)done++}});
   l.closest('.ex').classList.toggle('done',all&&bs.length>0);
-  var bi=l.querySelector('.barinfo');if(bi){var a=num(st.kg[k]);bi.textContent='+ barra '+br(st.barra,1)+' kg'+(a!=null?' = '+br(a+st.barra,1)+' kg no total':'')+' (o peso da barra se muda no GYM BOOK)'}
+  var bi=l.querySelector('.barinfo');if(bi){var a=num(st.kg[k]);bi.textContent='+ barra '+br(bw(k),1)+' kg'+(a!=null?' = '+br(a+bw(k),1)+' kg no total':'')+bwt(k)}
   fillSug(l);
  });
  document.getElementById('prog').textContent=done+' de '+tot+' séries';
@@ -400,7 +401,7 @@ document.querySelectorAll('.switch button,.sub button').forEach(function(b){b.ad
 document.querySelectorAll('.log').forEach(function(l){
  var k=l.dataset.k,kg=l.querySelector('#kg-'+k),rp=l.querySelector('#rp-'+k);
  kg.value=st.kg[k]||'';rp.value=defR(l);
- function upd(){if(!kg.classList.contains('sug')){var v=num(kg.value);if(v==null)delete st.kg[k];else st.kg[k]=String(v)}else v=num(kg.value);if(!rp.classList.contains('sug')){var r=num(rp.value);if(r!=null)st.rp[k]=String(Math.round(r))}save();var bi=l.querySelector('.barinfo');if(bi&&isB(k)){bi.textContent='+ barra '+br(st.barra,1)+' kg'+(v!=null?' = '+br(v+st.barra,1)+' kg no total':'')+' (o peso da barra se muda no GYM BOOK)'}}
+ function upd(){if(!kg.classList.contains('sug')){var v=num(kg.value);if(v==null)delete st.kg[k];else st.kg[k]=String(v)}else v=num(kg.value);if(!rp.classList.contains('sug')){var r=num(rp.value);if(r!=null)st.rp[k]=String(Math.round(r))}save();var bi=l.querySelector('.barinfo');if(bi&&isB(k)){bi.textContent='+ barra '+br(bw(k),1)+' kg'+(v!=null?' = '+br(v+bw(k),1)+' kg no total':'')+bwt(k)}}
  ['input','change'].forEach(function(ev){kg.addEventListener(ev,function(){kg.classList.remove('sug');upd()});rp.addEventListener(ev,function(){rp.classList.remove('sug');upd()})});
  ['blur','keyup'].forEach(function(ev){kg.addEventListener(ev,upd);rp.addEventListener(ev,upd)});
  kg.addEventListener('focus',function(){if(kg.classList.contains('sug'))setTimeout(function(){try{kg.select()}catch(e){}},0)});rp.addEventListener('focus',function(){if(rp.classList.contains('sug'))setTimeout(function(){try{rp.select()}catch(e){}},0)});
@@ -411,7 +412,7 @@ document.querySelectorAll('.log').forEach(function(l){
  l.querySelectorAll('.setbtn').forEach(function(b){var lt=0;b.addEventListener('click',function(){
   var now=Date.now();if(now-lt<800)return;lt=now;
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();upd();var h=curKey(),d=st.log[h]=st.log[h]||{};d[k]=d[k]||{};
-  if(d[k][b.dataset.s])delete d[k][b.dataset.s];else{var pv=prevSet(k,b.dataset.s);d[k][b.dataset.s]={kg:(kg.classList.contains('sug')&&pv)?pv.kg:num(kg.value),r:(rp.classList.contains('sug')&&pv)?pv.r:num(rp.value),t:Date.now()};if(isB(k))d[k][b.dataset.s].b=st.barra}
+  if(d[k][b.dataset.s])delete d[k][b.dataset.s];else{var pv=prevSet(k,b.dataset.s);d[k][b.dataset.s]={kg:(kg.classList.contains('sug')&&pv)?pv.kg:num(kg.value),r:(rp.classList.contains('sug')&&pv)?pv.r:num(rp.value),t:Date.now()};if(isB(k))d[k][b.dataset.s].b=bw(k)}
   if(!Object.keys(d[k]).length)delete d[k];if(!Object.keys(d).length)delete st.log[h];
   save();render();if(navigator.vibrate)navigator.vibrate(15)})});
 });
@@ -457,7 +458,7 @@ document.getElementById('fimnao').addEventListener('click',function(){document.g
 document.getElementById('fimsim').addEventListener('click',function(){
  var k=st.cur;document.getElementById('fimbox').hidden=true;fb.hidden=false;if(!k)return;
  st.closed[k]=Date.now();st.cur=null;st.kg={};st.rp={};save();
- document.querySelectorAll('.log').forEach(function(l){var x=l.dataset.k;l.querySelector('#kg-'+x).value='';l.querySelector('#rp-'+x).value=l.dataset.r;var bi=l.querySelector('.barinfo');if(bi)bi.textContent='+ barra '+br(st.barra,1)+' kg (o peso da barra se muda no GYM BOOK)'});
+ document.querySelectorAll('.log').forEach(function(l){var x=l.dataset.k;l.querySelector('#kg-'+x).value='';l.querySelector('#rp-'+x).value=l.dataset.r;var bi=l.querySelector('.barinfo');if(bi)bi.textContent='+ barra '+br(bw(x),1)+' kg (o peso da barra se muda no GYM BOOK)'});
  if(window.__runLoad)window.__runLoad();if(window.__swimLoad)window.__swimLoad();window.__salvo=true;window.__dsel=k;show('D');window.scrollTo(0,0);window.__salvo=false;if(navigator.vibrate)navigator.vibrate([30,60,30]);
 });
 var rs=document.getElementById('reset'),rsT=null;
